@@ -1,16 +1,9 @@
-/* While this template provides a good starting point for using Wear Compose, you can always
- * take a look at https://github.com/android/wear-os-samples/tree/main/ComposeStarter and
- * https://github.com/android/wear-os-samples/tree/main/ComposeAdvanced to find the most up to date
- * changes to the libraries and their usages.
- */
-
 package com.fexed.wearcountdown.presentation
 
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -33,7 +26,6 @@ import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import com.fexed.wearcountdown.presentation.theme.WearCountdownTheme
 import com.google.android.horologist.composables.DatePicker
-import com.google.android.horologist.composables.TimePicker
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -49,49 +41,52 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var navController: NavHostController
     private lateinit var prefs: SharedPreferences
+    private lateinit var targetDate : Instant
+    private lateinit var originDate : Instant
+    private lateinit var dateLabel : String
+    private val formatter = DateTimeFormatter.ISO_INSTANT
+    private val labelFormatter = DateTimeFormatter.ISO_DATE
+    private val tz = ZoneId.systemDefault()
 
-    @OptIn(ExperimentalWearMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prefs = getPreferences(MODE_PRIVATE)
+        targetDate = Instant.parse(prefs.getString(TargetDate_key, "1970-01-01T00:00:00.00Z"))
+        originDate = Instant.parse(prefs.getString(OriginDate_key, "1970-01-01T00:00:00.00Z"))
+        dateLabel = "${targetDate.atZone(tz).year}-${targetDate.atZone(tz).month}-${targetDate.atZone(tz).dayOfMonth}"
+
+        if (ZonedDateTime.ofInstant(targetDate, tz).year == 1970) {
+            targetDate = Instant.now().plusMillis(10000)
+        }
+
+        if (ZonedDateTime.ofInstant(originDate, tz).year == 1970) {
+            originDate = Instant.now()
+            //prefs.edit().putString("originDate", formatter.format(originDate)).apply()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         setContent {
             navController = rememberSwipeDismissableNavController()
-
-            var difference by remember { mutableStateOf(0L) }
-            val formatter = DateTimeFormatter.ISO_INSTANT
-            val labelFormatter = DateTimeFormatter.ISO_DATE
-            var targetDate = Instant.parse(prefs.getString(TargetDate_key, "1970-01-01T00:00:00.00Z"))
-            var originDate = Instant.parse(prefs.getString(OriginDate_key, "1970-01-01T00:00:00.00Z"))
-            val tz = ZoneId.systemDefault()
-            var label = "${targetDate.atZone(tz).year}-${targetDate.atZone(tz).month}-${targetDate.atZone(tz).dayOfMonth}"
-
-            if (ZonedDateTime.ofInstant(targetDate, tz).year == 1970) {
-                targetDate = Instant.now().plusMillis(10000)
-            }
-
-            if (ZonedDateTime.ofInstant(originDate, tz).year == 1970) {
-                originDate = Instant.now()
-                //prefs.edit().putString("originDate", formatter.format(originDate)).apply()
-            }
-
-            Log.d("TARGET", "${targetDate.epochSecond}")
-            Log.d("ORIGIN", "${originDate.epochSecond}")
-            difference = targetDate.epochSecond - originDate.epochSecond
+            var difference = targetDate.epochSecond - originDate.epochSecond
 
             SwipeDismissableNavHost(navController = navController, startDestination = Destinations.MainPage.route) {
                 composable(route = Destinations.MainPage.route) {
-                    MainProgressPage(targetDate, difference, label!!) {
+                    MainProgressPage(targetDate, difference, dateLabel) {
                         navController.navigate(Destinations.EditDialog.route)
                     }
                 }
 
                 composable(route = Destinations.EditDialog.route) {
-                    EditDialog {
+                    EditDialog(currentDate = targetDate.atZone(tz).toLocalDate()) {
                         originDate = Instant.now()
                         targetDate = it!!.atStartOfDay(tz).toInstant()
-                        label = "${targetDate.atZone(tz).year}-${targetDate.atZone(tz).month}-${targetDate.atZone(tz).dayOfMonth}"
+                        dateLabel = "${targetDate.atZone(tz).year}-${targetDate.atZone(tz).month}-${targetDate.atZone(tz).dayOfMonth}"
                         prefs.edit().putString(OriginDate_key, formatter.format(Instant.now())).apply()
                         prefs.edit().putString(TargetDate_key, formatter.format(targetDate)).apply()
+                        difference = targetDate.epochSecond - originDate.epochSecond
                         navController.popBackStack()
                     }
                 }
@@ -101,7 +96,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainProgressPage(targetDate: Instant, max: Long, label: String, ediDialogNavigation : (() -> Unit)) {
+fun MainProgressPage(targetDate: Instant, max: Long, label: String, editDialogNavigation : (() -> Unit)) {
     var now by remember { mutableStateOf(Instant.now()) }
     val current = (targetDate.epochSecond - now.epochSecond).coerceAtLeast(0)
     val perc = current.toFloat() / max
@@ -116,7 +111,7 @@ fun MainProgressPage(targetDate: Instant, max: Long, label: String, ediDialogNav
         Box(modifier = Modifier
             .fillMaxSize()
             .clickable {
-                ediDialogNavigation.invoke()
+                editDialogNavigation.invoke()
             }, contentAlignment = Alignment.Center) {
             CircularProgressIndicator(modifier = Modifier.fillMaxSize(), strokeWidth = 10.dp, progress = perc, trackColor = Color.Transparent)
             Column(
@@ -161,7 +156,7 @@ fun Countdown(n: Long) {
 }
 
 @Composable
-fun EditDialog(onDismiss : ((LocalDate?) -> Unit)) {
+fun EditDialog(currentDate : LocalDate?, onDismiss : ((LocalDate?) -> Unit)) {
     val startingDate = LocalDate.now()
     WearCountdownTheme {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -180,7 +175,7 @@ fun EditDialog(onDismiss : ((LocalDate?) -> Unit)) {
 
                 DatePicker(onDateConfirm = {
                     onDismiss(it)
-                }, fromDate = startingDate, modifier = Modifier.padding(8.dp))
+                }, fromDate = startingDate, date = currentDate ?: startingDate)
             }
         }
     }
@@ -198,7 +193,7 @@ fun RoundPreview() {
 @Preview(device = Devices.WEAR_OS_SQUARE, showSystemUi = true)
 @Composable
 fun SquarePreview() {
-    val targetDate = Instant.parse("2023-02-25T16:23:00.00Z")
+    val targetDate = Instant.parse("2023-02-26T16:23:00.00Z")
     val originDate = Instant.parse("2023-02-25T00:00:00.00Z")
     val difference = targetDate.epochSecond - originDate.epochSecond
     MainProgressPage(targetDate = targetDate, max = difference, "Square $difference") {}
@@ -207,11 +202,11 @@ fun SquarePreview() {
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
 fun RoundDialogPreview() {
-    EditDialog {}
+    EditDialog(null) {}
 }
 
 @Preview(device = Devices.WEAR_OS_SQUARE, showSystemUi = true)
 @Composable
 fun SquareDialogPreview() {
-    EditDialog {}
+    EditDialog(null) {}
 }
