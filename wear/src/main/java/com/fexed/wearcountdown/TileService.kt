@@ -59,6 +59,7 @@ class TileService : SuspendingTileService()  {
             .addContent(
                 LayoutElementBuilders.Text.Builder()
                     .setText(Countdown(current))
+                    .setModifiers(ModifiersBuilders.Modifiers.Builder().setClickable(launchAppClickable(openApp())).build())
                     .build()
             )
             .addContent(progressBar)
@@ -75,4 +76,19 @@ class TileService : SuspendingTileService()  {
         difference %= 60
         return "${if (days > 0) "${days}d " else ""}${if (days > 0 || hours > 0) "${hours}h " else ""}${if (hours > 0 || minutes > 0) "${minutes}m " else ""}"
     }
+
+    internal fun launchAppClickable(
+        androidActivity: ActionBuilders.AndroidActivity
+    ) = ModifiersBuilders.Clickable.Builder()
+        .setOnClick(
+            ActionBuilders.LaunchAction.Builder()
+                .setAndroidActivity(androidActivity)
+                .build()
+        )
+        .build()
+
+    internal fun openApp() = ActionBuilders.AndroidActivity.Builder()
+        .setPackageName("com.fexed.wearcountdown")
+        .setClassName("com.fexed.wearcountdown.presentation.MainActivity")
+        .build()
 }
