@@ -1,5 +1,8 @@
 package com.fexed.wearcountdown.presentation
 
+import android.app.Activity
+import android.app.RemoteInput
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
@@ -7,18 +10,16 @@ import android.os.Looper
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,11 +32,10 @@ import androidx.wear.compose.material.Text
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
-import com.fexed.wearcountdown.R
+import androidx.wear.input.RemoteInputIntentHelper
+import androidx.wear.input.RemoteInputIntentHelper.Companion.putRemoteInputsExtra
 import com.fexed.wearcountdown.presentation.theme.WearCountdownTheme
-import com.google.android.horologist.composables.DatePicker
 import java.time.Instant
-import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -56,6 +56,8 @@ class MainActivity : ComponentActivity() {
     private val labelFormatter =
         DateTimeFormatter.ofPattern("yyyy / MM / dd").withZone(ZoneId.systemDefault())
     private val tz = ZoneId.systemDefault()
+    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    lateinit var tempLabel: MutableState<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,13 +68,21 @@ class MainActivity : ComponentActivity() {
             Instant.parse(prefs.getString(OriginDate_key, null) ?: "1970-01-01T00:00:00.00Z")
         dateLabel = prefs.getString(Label_key, null) ?: labelFormatter.format(targetDate)
 
+        if (ZonedDateTime.ofInstant(originDate, tz).year == 1970) {
+            originDate = Instant.now()
+        }
+
         if (ZonedDateTime.ofInstant(targetDate, tz).year == 1970) {
             targetDate = Instant.now().plusMillis(10000)
         }
 
-        if (ZonedDateTime.ofInstant(originDate, tz).year == 1970) {
-            originDate = Instant.now()
-            //prefs.edit().putString("originDate", formatter.format(originDate)).apply()
+        resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val results = RemoteInput.getResultsFromIntent(result.data)
+                if (results != null) {
+                    tempLabel.value = results.getCharSequence("input_label").toString()
+                }
+            }
         }
     }
 
@@ -85,7 +95,7 @@ class MainActivity : ComponentActivity() {
 
             var tempOrigin by remember { mutableStateOf(originDate) }
             var tempTarget by remember { mutableStateOf(targetDate) }
-            var tempLabel by remember { mutableStateOf(dateLabel) }
+            tempLabel = remember { mutableStateOf(dateLabel) }
 
             Log.d("TARGET", labelFormatter.format(tempTarget))
             Log.d("ORIGIN", labelFormatter.format(tempOrigin))
@@ -105,10 +115,6 @@ class MainActivity : ComponentActivity() {
                     DatePickerDialog(currentDate = targetDate.atZone(tz).toLocalDate()) {
                         tempTarget = it!!.atStartOfDay(tz).toInstant()
 
-                        // TODO remove when label creation is completed
-                        tempLabel = labelFormatter.format(tempTarget)
-                        // --------------------------------------------
-
                         navController.popBackStack()
                     }
                 }
@@ -124,9 +130,9 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(route = Destinations.LabelPicker.route) {
-                    tempLabel = labelFormatter.format(tempTarget)
-                    LabelPickerDialog(label = tempLabel) {
-                        tempLabel = it
+                    tempLabel.value = labelFormatter.format(tempTarget)
+                    LabelPickerDialog(label = tempLabel.value) {
+                        tempLabel.value = it
                         navController.popBackStack()
                     }
                 }
@@ -144,14 +150,19 @@ class MainActivity : ComponentActivity() {
                         targetDateEdit = {
                             navController.navigate(Destinations.TargetDatePicker.route)
                         },
-                        label = tempLabel,
+                        label = tempLabel.value,
                         labelEdit = {
-                            navController.navigate(Destinations.LabelPicker.route)
+                            val remoteInputs: List<RemoteInput> = listOf(
+                                RemoteInput.Builder("input_label").setLabel("Countdown label").build()
+                            )
+                            val intent: Intent = RemoteInputIntentHelper.createActionRemoteInputIntent()
+                            putRemoteInputsExtra(intent, remoteInputs)
+                            resultLauncher.launch(intent)
                         },
                         confirmBtn = {
                             originDate = tempOrigin
                             targetDate = tempTarget
-                            dateLabel = tempLabel
+                            dateLabel = tempLabel.value
 
                             prefs.edit().putString(OriginDate_key, formatter.format(originDate))
                                 .apply()

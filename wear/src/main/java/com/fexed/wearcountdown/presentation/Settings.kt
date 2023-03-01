@@ -137,16 +137,16 @@ fun SettingsDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    /*Text(
+                    Text(
                         modifier = Modifier.wrapContentSize(),
                         textAlign = TextAlign.Center,
                         color = Color.White,
                         fontSize = 16.sp,
                         text = "Label"
-                    )*/
+                    )
                     Text(
                         modifier = Modifier.wrapContentSize(),
                         textAlign = TextAlign.Center,
@@ -154,9 +154,9 @@ fun SettingsDialog(
                         fontSize = 12.sp,
                         text = label
                     )
-                    /*Box(modifier = Modifier.clickable { labelEdit.invoke() }) {
+                    Box(modifier = Modifier.clickable { labelEdit.invoke() }) {
                         Icon(Icons.Filled.Edit, contentDescription = "Edit label button")
-                    }*/
+                    }
                 }
             }
             item {
