@@ -7,6 +7,8 @@ import com.fexed.wearcountdown.presentation.MainActivity
 import com.google.android.horologist.tiles.ExperimentalHorologistTilesApi
 import com.google.android.horologist.tiles.SuspendingTileService
 import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalHorologistTilesApi::class)
 class TileService : SuspendingTileService()  {
@@ -47,6 +49,8 @@ class TileService : SuspendingTileService()  {
         val originDate =
             Instant.parse(prefs.getString(MainActivity.OriginDate_key, null) ?: "1970-01-01T00:00:00.00Z")
         val current = (targetDate.epochSecond - Instant.now().epochSecond).coerceAtLeast(0)
+        val labelFormatter = DateTimeFormatter.ofPattern("yyyy / MM / dd").withZone(ZoneId.systemDefault())
+        val dateLabel = prefs.getString(MainActivity.Label_key, null) ?: labelFormatter.format(targetDate)
         val max = (targetDate.epochSecond - originDate.epochSecond).coerceAtLeast(0)
         val perc = current.toFloat() / max
 
@@ -57,9 +61,22 @@ class TileService : SuspendingTileService()  {
             .setWidth(DimensionBuilders.expand())
             .setHeight(DimensionBuilders.expand())
             .addContent(
-                LayoutElementBuilders.Text.Builder()
-                    .setText(Countdown(current))
-                    .setModifiers(ModifiersBuilders.Modifiers.Builder().setClickable(launchAppClickable(openApp())).build())
+                LayoutElementBuilders.Column.Builder()
+                    .addContent (
+                        LayoutElementBuilders.Text.Builder()
+                            .setText(Countdown(current))
+                            .setModifiers(
+                                ModifiersBuilders.Modifiers.Builder()
+                                    .setClickable(launchAppClickable(openApp())).build()
+                            )
+                            .build()
+                    )
+                    .addContent(
+                        LayoutElementBuilders.Text.Builder()
+                            .setText(dateLabel)
+                            .setModifiers(ModifiersBuilders.Modifiers.Builder().setClickable(launchAppClickable(openApp())).build())
+                            .build()
+                    )
                     .build()
             )
             .addContent(progressBar)
