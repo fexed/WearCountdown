@@ -42,9 +42,9 @@ import java.time.format.DateTimeFormatter
 
 class MainActivity : ComponentActivity() {
     companion object {
-        const val TargetDate_key = "targetDBG1";
-        const val OriginDate_key = "originDBG1";
-        const val Label_key = "labelDBG1";
+        const val TargetDate_key = "targetDBG2";
+        const val OriginDate_key = "originDBG2";
+        const val Label_key = "labelDBG2";
     }
 
     private lateinit var navController: NavHostController
