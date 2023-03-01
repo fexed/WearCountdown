@@ -49,7 +49,7 @@
             <!-- The tile preview shown when configuring tiles on your phone -->
             <meta-data
                 android:name="androidx.wear.tiles.PREVIEW"
-                android:resource="@mipmap/ic_launcher" /> <!-- TODO -->
+                android:resource="@drawable/tile_preview" />
         </service>
     </application>
 
