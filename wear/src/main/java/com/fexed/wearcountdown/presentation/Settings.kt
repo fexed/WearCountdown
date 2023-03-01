@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import com.fexed.wearcountdown.R
@@ -52,10 +53,8 @@ fun LabelPickerDialog(label: String, confirmBtn : ((String) -> Unit)) {
     WearCountdownTheme {
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
             BasicTextField(value = tmp, onValueChange = {tmp = it} )
-            Box(modifier = Modifier
-                .wrapContentSize()
-                .clickable { confirmBtn.invoke(tmp) }) {
-                Image(painterResource(id = R.drawable.confirmbtn), contentDescription = "")
+            Button(onClick = { confirmBtn.invoke(tmp) }) {
+                Text(text = "Confirm")
             }
         }
     }
@@ -166,9 +165,7 @@ fun SettingsDialog(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(modifier = Modifier
-                        .wrapContentSize()
-                        .clickable { confirmBtn.invoke() }) {
+                    Button(onClick = { confirmBtn.invoke() }) {
                         Image(painterResource(id = R.drawable.confirmbtn), contentDescription = "")
                     }
                 }
