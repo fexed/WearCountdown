@@ -34,6 +34,7 @@ import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import androidx.wear.input.RemoteInputIntentHelper
 import androidx.wear.input.RemoteInputIntentHelper.Companion.putRemoteInputsExtra
+import com.fexed.wearcountdown.R
 import com.fexed.wearcountdown.presentation.theme.WearCountdownTheme
 import java.time.Instant
 import java.time.ZoneId
@@ -42,9 +43,9 @@ import java.time.format.DateTimeFormatter
 
 class MainActivity : ComponentActivity() {
     companion object {
-        const val TargetDate_key = "targetDBG2";
-        const val OriginDate_key = "originDBG2";
-        const val Label_key = "labelDBG2";
+        var TargetDate_key = "target_DEBUG";
+        var OriginDate_key = "origin_DEBUG";
+        var Label_key = "label_DEBUG";
     }
 
     private lateinit var navController: NavHostController
@@ -61,6 +62,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        TargetDate_key = getString(R.string.targetDateKey)
+        OriginDate_key = getString(R.string.originDateKey)
+        Label_key = getString(R.string.labelKey)
+
         prefs = applicationContext.getSharedPreferences("com.fexed.wearcountdown", MODE_PRIVATE)
         targetDate =
             Instant.parse(prefs.getString(TargetDate_key, null) ?: "1970-01-01T00:00:00.00Z")

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="targetDateKey">target_DEBUG</string>
+    <string name="originDateKey">origin_DEBUG</string>
+    <string name="labelKey">label_DEBUG</string>
+</resources>
