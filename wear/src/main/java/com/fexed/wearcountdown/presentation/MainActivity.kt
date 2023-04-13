@@ -40,6 +40,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -191,7 +192,13 @@ fun MainProgressPage(
     targetDate: Instant, max: Long, label: String, editDialogNavigation: (() -> Unit)
 ) {
     var now by remember { mutableStateOf(Instant.now()) }
-    val current = (targetDate.epochSecond - now.epochSecond).coerceAtLeast(0)
+    var current = (targetDate.epochSecond - now.epochSecond)
+
+    val mTimeZone: TimeZone = GregorianCalendar().timeZone
+    val mGMTOffset: Int = (mTimeZone.rawOffset + if (mTimeZone.inDaylightTime(Date())) mTimeZone.dstSavings else 0)/1000
+    current -= mGMTOffset
+
+    current = current.coerceAtLeast(0)
     val perc = current.toFloat() / max
 
     if (current > 0) {
@@ -262,8 +269,8 @@ fun Countdown(n: Long) {
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
 fun RoundPreview() {
-    val targetDate = Instant.parse("2023-02-27T00:00:00.00Z")
-    val originDate = Instant.parse("2023-02-15T00:00:00.00Z")
+    val targetDate = Instant.parse("2023-08-09T00:00:00.00Z")
+    val originDate = Instant.parse("2022-08-09T00:00:00.00Z")
     val difference = targetDate.epochSecond - originDate.epochSecond
     MainProgressPage(targetDate = targetDate, max = difference, "Round $difference") {}
 }
@@ -271,8 +278,8 @@ fun RoundPreview() {
 @Preview(device = Devices.WEAR_OS_SQUARE, showSystemUi = true)
 @Composable
 fun SquarePreview() {
-    val targetDate = Instant.parse("2023-02-26T16:23:00.00Z")
-    val originDate = Instant.parse("2023-02-25T00:00:00.00Z")
+    val targetDate = Instant.parse("2023-08-09T00:00:00.00Z")
+    val originDate = Instant.parse("2022-08-09T00:00:00.00Z")
     val difference = targetDate.epochSecond - originDate.epochSecond
     MainProgressPage(targetDate = targetDate, max = difference, "Square $difference") {}
 }
