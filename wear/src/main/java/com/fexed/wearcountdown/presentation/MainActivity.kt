@@ -40,14 +40,11 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 class MainActivity : ComponentActivity() {
-    companion object {
-        var TargetDate_key = "target_DEBUG";
-        var OriginDate_key = "origin_DEBUG";
-        var Label_key = "label_DEBUG";
-    }
+    private var kTargetDate = "target_DEBUG";
+    private var kOriginDate = "origin_DEBUG";
+    private var kLabel = "label_DEBUG";
 
     private lateinit var navController: NavHostController
     private lateinit var prefs: SharedPreferences
@@ -64,16 +61,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        TargetDate_key = getString(R.string.targetDateKey)
-        OriginDate_key = getString(R.string.originDateKey)
-        Label_key = getString(R.string.labelKey)
+        kTargetDate = getString(R.string.targetDateKey)
+        kOriginDate = getString(R.string.originDateKey)
+        kLabel = getString(R.string.labelKey)
 
         prefs = applicationContext.getSharedPreferences("com.fexed.wearcountdown", MODE_PRIVATE)
         targetDate =
-            Instant.parse(prefs.getString(TargetDate_key, null) ?: "1970-01-01T00:00:00.00Z")
+            Instant.parse(prefs.getString(kTargetDate, null) ?: "1970-01-01T00:00:00.00Z")
         originDate =
-            Instant.parse(prefs.getString(OriginDate_key, null) ?: "1970-01-01T00:00:00.00Z")
-        dateLabel = prefs.getString(Label_key, null) ?: labelFormatter.format(targetDate)
+            Instant.parse(prefs.getString(kOriginDate, null) ?: "1970-01-01T00:00:00.00Z")
+        dateLabel = prefs.getString(kLabel, null) ?: labelFormatter.format(targetDate)
 
         if (ZonedDateTime.ofInstant(originDate, tz).year == 1970) {
             originDate = Instant.now()
@@ -171,11 +168,11 @@ class MainActivity : ComponentActivity() {
                             targetDate = tempTarget
                             dateLabel = tempLabel.value
 
-                            prefs.edit().putString(OriginDate_key, formatter.format(originDate))
+                            prefs.edit().putString(kOriginDate, formatter.format(originDate))
                                 .apply()
-                            prefs.edit().putString(TargetDate_key, formatter.format(targetDate))
+                            prefs.edit().putString(kTargetDate, formatter.format(targetDate))
                                 .apply()
-                            prefs.edit().putString(Label_key, dateLabel)
+                            prefs.edit().putString(kLabel, dateLabel)
                                 .apply()
                             difference = targetDate.epochSecond - originDate.epochSecond
                             navController.popBackStack()

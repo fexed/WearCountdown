@@ -44,15 +44,19 @@ class TileService : SuspendingTileService()  {
     }
 
     private fun tileLayout(): LayoutElement {
+        val kTargetDate = getString(R.string.targetDateKey)
+        val kOriginDate = getString(R.string.originDateKey)
+        val kLabel = getString(R.string.labelKey)
+
         val prefs = applicationContext.getSharedPreferences("com.fexed.wearcountdown", MODE_PRIVATE)
         val targetDate =
-            Instant.parse(prefs.getString(MainActivity.TargetDate_key, null) ?: "1970-01-01T00:00:00.00Z")
+            Instant.parse(prefs.getString(kTargetDate, null) ?: "1970-01-01T00:00:00.00Z")
         val originDate =
-            Instant.parse(prefs.getString(MainActivity.OriginDate_key, null) ?: "1970-01-01T00:00:00.00Z")
+            Instant.parse(prefs.getString(kOriginDate, null) ?: "1970-01-01T00:00:00.00Z")
         val current = (targetDate.epochSecond - Instant.now().epochSecond).coerceAtLeast(0)
 
         val labelFormatter = DateTimeFormatter.ofPattern("yyyy / MM / dd").withZone(ZoneId.systemDefault())
-        val dateLabel = prefs.getString(MainActivity.Label_key, null) ?: labelFormatter.format(targetDate)
+        val dateLabel = prefs.getString(kLabel, null) ?: labelFormatter.format(targetDate)
         val max = (targetDate.epochSecond - originDate.epochSecond).coerceAtLeast(0)
         val perc = current.toFloat() / max
 
