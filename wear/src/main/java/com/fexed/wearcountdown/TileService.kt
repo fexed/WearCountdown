@@ -49,13 +49,7 @@ class TileService : SuspendingTileService()  {
             Instant.parse(prefs.getString(MainActivity.TargetDate_key, null) ?: "1970-01-01T00:00:00.00Z")
         val originDate =
             Instant.parse(prefs.getString(MainActivity.OriginDate_key, null) ?: "1970-01-01T00:00:00.00Z")
-        var current = (targetDate.epochSecond - Instant.now().epochSecond)
-
-        val mTimeZone: TimeZone = GregorianCalendar().timeZone
-        val mGMTOffset: Int = (mTimeZone.rawOffset + if (mTimeZone.inDaylightTime(Date())) mTimeZone.dstSavings else 0)/1000
-        current -= mGMTOffset
-
-        current = current.coerceAtLeast(0)
+        val current = (targetDate.epochSecond - Instant.now().epochSecond).coerceAtLeast(0)
 
         val labelFormatter = DateTimeFormatter.ofPattern("yyyy / MM / dd").withZone(ZoneId.systemDefault())
         val dateLabel = prefs.getString(MainActivity.Label_key, null) ?: labelFormatter.format(targetDate)

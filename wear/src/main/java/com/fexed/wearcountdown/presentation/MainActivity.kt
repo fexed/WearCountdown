@@ -192,13 +192,7 @@ fun MainProgressPage(
     targetDate: Instant, max: Long, label: String, editDialogNavigation: (() -> Unit)
 ) {
     var now by remember { mutableStateOf(Instant.now()) }
-    var current = (targetDate.epochSecond - now.epochSecond)
-
-    val mTimeZone: TimeZone = GregorianCalendar().timeZone
-    val mGMTOffset: Int = (mTimeZone.rawOffset + if (mTimeZone.inDaylightTime(Date())) mTimeZone.dstSavings else 0)/1000
-    current -= mGMTOffset
-
-    current = current.coerceAtLeast(0)
+    val current = (targetDate.epochSecond - now.epochSecond).coerceAtLeast(0)
     val perc = current.toFloat() / max
 
     if (current > 0) {
