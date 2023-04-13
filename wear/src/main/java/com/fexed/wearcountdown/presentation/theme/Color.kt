@@ -3,17 +3,16 @@ package com.fexed.wearcountdown.presentation.theme
 import androidx.compose.ui.graphics.Color
 import androidx.wear.compose.material.Colors
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val GreyPimary = Color(0xFF65818F)
+val GreyVariant = Color(0xFF5A7582)
+val GreenSecondary = Color(0xFF658f88)
 val Red400 = Color(0xFFCF6679)
 
 internal val wearColorPalette: Colors = Colors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200,
-    secondaryVariant = Teal200,
+    primary = GreyPimary,
+    primaryVariant = GreyVariant,
+    secondary = GreenSecondary,
+    secondaryVariant = GreenSecondary,
     error = Red400,
     onPrimary = Color.Black,
     onSecondary = Color.Black,
