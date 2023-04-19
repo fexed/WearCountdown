@@ -1,7 +1,13 @@
 <resources>
     <string name="app_name">Wear Countdown</string>
-    <string name="tile_desc">Shows your countdown in a tile</string>
-    <string name="complication_short_text_desc">Countdown in short text format</string>
-    <string name="complication_long_text_desc">Countdown in long text format</string>
-    <string name="complication_ranged_value_desc">Countdown in ranged value format</string>
+
+    <string name="origin">Origin</string>
+    <string name="target">Target</string>
+    <string name="label">Label</string>
+
+    <string name="tile_desc">Shows the countdown in a homescreen tile</string>
+
+    <string name="complication_short_text_desc">Short text with days and hours</string>
+    <string name="complication_long_text_desc">Long text with label, days, hours and minutes</string>
+    <string name="complication_ranged_value_desc">Range with days and hours</string>
 </resources>

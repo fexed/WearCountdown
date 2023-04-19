@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,7 +55,7 @@ fun LabelPickerDialog(label: String, confirmBtn : ((String) -> Unit)) {
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
             BasicTextField(value = tmp, onValueChange = {tmp = it} )
             Button(onClick = { confirmBtn.invoke(tmp) }) {
-                Text(text = "Confirm")
+                Text(text = stringResource(id = android.R.string.ok))
             }
         }
     }
@@ -91,7 +92,7 @@ fun SettingsDialog(
                         textAlign = TextAlign.Center,
                         color = Color.White,
                         fontSize = 16.sp,
-                        text = "Origin"
+                        text = stringResource(id = R.string.origin)
                     )
                     Text(
                         modifier = Modifier.wrapContentSize(),
@@ -101,7 +102,7 @@ fun SettingsDialog(
                         text = originDate
                     )
                     Box(modifier = Modifier.clickable { originDateEdit.invoke() }) {
-                        Icon(Icons.Filled.Edit, contentDescription = "Edit origin date button")
+                        Icon(Icons.Filled.Edit, contentDescription = "")
                     }
                 }
             }
@@ -118,7 +119,7 @@ fun SettingsDialog(
                         textAlign = TextAlign.Center,
                         color = Color.White,
                         fontSize = 16.sp,
-                        text = "Target"
+                        text = stringResource(id = R.string.target)
                     )
                     Text(
                         modifier = Modifier.wrapContentSize(),
@@ -128,7 +129,7 @@ fun SettingsDialog(
                         text = targetDate
                     )
                     Box(modifier = Modifier.clickable { targetDateEdit.invoke() }) {
-                        Icon(Icons.Filled.Edit, contentDescription = "Edit target date button")
+                        Icon(Icons.Filled.Edit, contentDescription = "")
                     }
                 }
             }
@@ -145,7 +146,7 @@ fun SettingsDialog(
                         textAlign = TextAlign.Center,
                         color = Color.White,
                         fontSize = 16.sp,
-                        text = "Label"
+                        text = stringResource(id = R.string.label)
                     )
                     Text(
                         modifier = Modifier.wrapContentSize(),
@@ -155,7 +156,7 @@ fun SettingsDialog(
                         text = label
                     )
                     Box(modifier = Modifier.clickable { labelEdit.invoke() }) {
-                        Icon(Icons.Filled.Edit, contentDescription = "Edit label button")
+                        Icon(Icons.Filled.Edit, contentDescription = "")
                     }
                 }
             }
@@ -178,13 +179,13 @@ fun SettingsDialog(
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
 fun RoundDialogPreview() {
-    SettingsDialog(originDate = "origin", targetDate = "target", label = "label",
+    SettingsDialog(originDate = "dd/mm/yyyy", targetDate = "dd/mm/yyyy", label = "label",
         originDateEdit = {}, targetDateEdit = {}, labelEdit = {}, confirmBtn = {})
 }
 
 @Preview(device = Devices.WEAR_OS_SQUARE, showSystemUi = true)
 @Composable
 fun SquareDialogPreview() {
-    SettingsDialog(originDate = "origin", targetDate = "target", label = "label",
+    SettingsDialog(originDate = "dd/mm/yyyy", targetDate = "dd/mm/yyyy", label = "label",
         originDateEdit = {}, targetDateEdit = {}, labelEdit = {}, confirmBtn = {})
 }

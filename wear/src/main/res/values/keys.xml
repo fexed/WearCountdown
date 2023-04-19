@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="targetDateKey">target</string>
-    <string name="originDateKey">origin</string>
-    <string name="labelKey">label</string>
+    <string name="targetDateKey" translatable="false">target</string>
+    <string name="originDateKey" translatable="false">origin</string>
+    <string name="labelKey" translatable="false">label</string>
 </resources>
