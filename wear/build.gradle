@@ -68,6 +68,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.4"
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
+    implementation 'androidx.wear:wear-input:1.1.0'
+    implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.1.1'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
