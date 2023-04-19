@@ -4,6 +4,8 @@ import android.content.ComponentName
 import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
+import com.fexed.wearcountdown.presentation.CountdownType
+import com.fexed.wearcountdown.presentation.countdown
 import java.time.Instant
 
 class RangedValueComplicationService : SuspendingComplicationDataSourceService()  {
@@ -45,20 +47,11 @@ class RangedValueComplicationService : SuspendingComplicationDataSourceService()
                 contentDescription = PlainComplicationText
                     .Builder(text = getString(R.string.complication_ranged_value_desc)).build()
             )
-                .setText(PlainComplicationText.Builder(text = CountdownShort(current)).build())
+                .setText(PlainComplicationText.Builder(text = countdown(current, CountdownType.SHORT)).build())
                 .setTapAction(complicationPendingIntent)
                 .build()
 
             else -> null
         }
-    }
-
-    fun CountdownShort(n: Long): String {
-        var difference = n
-        val days: Long = difference / (24 * 3600)
-        difference %= (24 * 3600)
-        val hours: Long = difference / 3600
-        difference %= 3600
-        return "${if (days > 0) "${days}d " else ""}${if (days > 0 || hours > 0) "${hours}h " else ""}"
     }
 }

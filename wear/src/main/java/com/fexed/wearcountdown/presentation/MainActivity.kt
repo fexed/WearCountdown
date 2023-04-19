@@ -241,19 +241,13 @@ fun MainProgressPage(
 
 @Composable
 fun Countdown(n: Long) {
-    var difference = n
-    val days: Long = difference / (24 * 3600)
-    difference %= (24 * 3600)
-    val hours: Long = difference / 3600
-    difference %= 3600
-    val minutes: Long = difference / 60
-    difference %= 60
+    val text = countdown(n, CountdownType.LONG)
     Text(
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
         color = Color.White,
         fontSize = 18.sp,
-        text = "${if (days > 0) "${days}d " else ""}${if (days > 0 || hours > 0) "${hours}h " else ""}${if (hours > 0 || minutes > 0) "${minutes}m " else ""}${difference}s"
+        text = text
     )
 }
 

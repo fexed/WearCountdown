@@ -4,6 +4,8 @@ import android.content.ComponentName
 import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
+import com.fexed.wearcountdown.presentation.CountdownType
+import com.fexed.wearcountdown.presentation.countdown
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -36,7 +38,7 @@ class LongTextComplicationService : SuspendingComplicationDataSourceService()  {
 
         return when (request.complicationType) {
             ComplicationType.LONG_TEXT -> LongTextComplicationData.Builder(
-                text = PlainComplicationText.Builder(text = "${CountdownLong(current)}\n$dateLabel").build(),
+                text = PlainComplicationText.Builder(text = "${countdown(current, CountdownType.LONG_NO_SECONDS)}\n$dateLabel").build(),
                 contentDescription = PlainComplicationText
                     .Builder(text = getString(R.string.complication_long_text_desc)).build()
             )
@@ -45,16 +47,5 @@ class LongTextComplicationService : SuspendingComplicationDataSourceService()  {
 
             else -> null
         }
-    }
-
-    fun CountdownLong(n: Long): String {
-        var difference = n
-        val days: Long = difference / (24 * 3600)
-        difference %= (24 * 3600)
-        val hours: Long = difference / 3600
-        difference %= 3600
-        val minutes: Long = difference / 60
-        difference %= 60
-        return "${if (days > 0) "${days}d " else ""}${if (days > 0 || hours > 0) "${hours}h " else ""}${if (hours > 0 || minutes > 0) "${minutes}m " else ""}"
     }
 }

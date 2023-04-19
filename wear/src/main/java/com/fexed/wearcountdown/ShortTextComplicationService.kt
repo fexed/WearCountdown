@@ -4,6 +4,8 @@ import android.content.ComponentName
 import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
+import com.fexed.wearcountdown.presentation.CountdownType
+import com.fexed.wearcountdown.presentation.countdown
 import java.time.Instant
 
 class ShortTextComplicationService : SuspendingComplicationDataSourceService()  {
@@ -32,7 +34,7 @@ class ShortTextComplicationService : SuspendingComplicationDataSourceService()  
 
         return when (request.complicationType) {
             ComplicationType.SHORT_TEXT -> ShortTextComplicationData.Builder(
-                text = PlainComplicationText.Builder(text = CountdownShort(current)).build(),
+                text = PlainComplicationText.Builder(text = countdown(current, CountdownType.SHORT)).build(),
                 contentDescription = PlainComplicationText
                     .Builder(text = getString(R.string.complication_short_text_desc)).build()
             )
@@ -41,14 +43,5 @@ class ShortTextComplicationService : SuspendingComplicationDataSourceService()  
 
             else -> null
         }
-    }
-
-    fun CountdownShort(n: Long): String {
-        var difference = n
-        val days: Long = difference / (24 * 3600)
-        difference %= (24 * 3600)
-        val hours: Long = difference / 3600
-        difference %= 3600
-        return "${if (days > 0) "${days}d " else ""}${if (days > 0 || hours > 0) "${hours}h " else "0h"}"
     }
 }

@@ -3,7 +3,9 @@ package com.fexed.wearcountdown
 import androidx.wear.tiles.*
 import androidx.wear.tiles.LayoutElementBuilders.LayoutElement
 import androidx.wear.tiles.material.CircularProgressIndicator
+import com.fexed.wearcountdown.presentation.CountdownType
 import com.fexed.wearcountdown.presentation.MainActivity
+import com.fexed.wearcountdown.presentation.countdown
 import com.google.android.horologist.tiles.ExperimentalHorologistTilesApi
 import com.google.android.horologist.tiles.SuspendingTileService
 import java.time.Instant
@@ -70,7 +72,7 @@ class TileService : SuspendingTileService()  {
                 LayoutElementBuilders.Column.Builder()
                     .addContent (
                         LayoutElementBuilders.Text.Builder()
-                            .setText(Countdown(current))
+                            .setText(countdown(current, CountdownType.LONG_NO_SECONDS))
                             .setModifiers(
                                 ModifiersBuilders.Modifiers.Builder()
                                     .setClickable(launchAppClickable(openApp())).build()
@@ -87,17 +89,6 @@ class TileService : SuspendingTileService()  {
             )
             .addContent(progressBar)
             .build()
-    }
-
-    fun Countdown(n: Long): String {
-        var difference = n
-        val days: Long = difference / (24 * 3600)
-        difference %= (24 * 3600)
-        val hours: Long = difference / 3600
-        difference %= 3600
-        val minutes: Long = difference / 60
-        difference %= 60
-        return "${if (days > 0) "${days}d " else ""}${if (days > 0 || hours > 0) "${hours}h " else ""}${if (hours > 0 || minutes > 0) "${minutes}m " else ""}"
     }
 
     internal fun launchAppClickable(
