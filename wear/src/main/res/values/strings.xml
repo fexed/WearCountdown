@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Wear Countdown</string>
 
-    <string name="origin">Origin</string>
+    <string name="origin">Orig.</string>
     <string name="target">Target</string>
     <string name="label">Label</string>
 
