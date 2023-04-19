@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wear Countdown</string>
+
+    <string name="origin">Origine</string>
+    <string name="target">Obiettivo</string>
+    <string name="label">Etichetta</string>
+
+    <string name="tile_desc">Mostra il countdown in una scheda della schermata principale</string>
+
+    <string name="complication_short_text_desc">Testo breve con giorni ed ore</string>
+    <string name="complication_long_text_desc">Testo lungo con etichetta, giorni, ore e minuti</string>
+    <string name="complication_ranged_value_desc">Range con giorni ed ore</string>
+</resources>
