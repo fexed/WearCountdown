@@ -15,7 +15,7 @@ class LongTextComplicationService : SuspendingComplicationDataSourceService()  {
         return when (type) {
             ComplicationType.LONG_TEXT -> {
                 LongTextComplicationData.Builder(
-                    text = PlainComplicationText.Builder(text = "Countdown: 1d 12h 30m").build(),
+                    text = PlainComplicationText.Builder(text = "1d 12h 30m\nWear Countdown").build(),
                     contentDescription = PlainComplicationText.Builder(text = getString(R.string.complication_long_text_desc)).build()
                 ).setTapAction(null).build()
             }
