@@ -1,5 +1,6 @@
 package com.fexed.wearcountdown
 
+import android.content.ComponentName
 import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
@@ -34,7 +35,7 @@ class RangedValueComplicationService : SuspendingComplicationDataSourceService()
         val max = (targetDate.epochSecond - originDate.epochSecond).coerceAtLeast(0)
         val perc = current.toFloat() / max
 
-        val complicationPendingIntent = ComplicationReceiver.getToggleIntent(this, request.complicationInstanceId)
+        val complicationPendingIntent = ComplicationReceiver.getToggleIntent(this, ComponentName(this, javaClass), request.complicationInstanceId)
 
         return when (request.complicationType) {
             ComplicationType.RANGED_VALUE -> RangedValueComplicationData.Builder(

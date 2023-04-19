@@ -1,5 +1,6 @@
 package com.fexed.wearcountdown
 
+import android.content.ComponentName
 import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
@@ -31,7 +32,7 @@ class LongTextComplicationService : SuspendingComplicationDataSourceService()  {
         val dateLabel = prefs.getString(kLabel, null) ?: labelFormatter.format(targetDate)
         val current = (targetDate.epochSecond - Instant.now().epochSecond).coerceAtLeast(0)
 
-        val complicationPendingIntent = ComplicationReceiver.getToggleIntent(this, request.complicationInstanceId)
+        val complicationPendingIntent = ComplicationReceiver.getToggleIntent(this, ComponentName(this, javaClass), request.complicationInstanceId)
 
         return when (request.complicationType) {
             ComplicationType.LONG_TEXT -> LongTextComplicationData.Builder(
