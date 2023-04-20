@@ -42,8 +42,9 @@ class LongTextComplicationService : SuspendingComplicationDataSourceService()  {
                 contentDescription = PlainComplicationText
                     .Builder(text = getString(R.string.complication_long_text_desc)).build()
             )
-                .setTapAction(complicationPendingIntent)
-                .build()
+            .setTitle(PlainComplicationText.Builder(text = dateLabel).build())
+            .setTapAction(complicationPendingIntent)
+            .build()
 
             else -> null
         }
