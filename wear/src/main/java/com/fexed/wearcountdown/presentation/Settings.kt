@@ -2,17 +2,19 @@ package com.fexed.wearcountdown.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -29,6 +31,7 @@ import androidx.wear.compose.material.Text
 import com.fexed.wearcountdown.R
 import com.fexed.wearcountdown.presentation.theme.WearCountdownTheme
 import com.google.android.horologist.composables.DatePicker
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 
@@ -77,18 +80,31 @@ fun SettingsDialog(
     confirmBtn: (() -> Unit)
 ) {
     val listState = rememberScalingLazyListState()
+    val focusRequester = remember { FocusRequester() }
+    val coroutineScope = rememberCoroutineScope()
+
     WearCountdownTheme {
         Row {
+            LaunchedEffect(Unit) { focusRequester.requestFocus() }
             ScalingLazyColumn(
                 modifier = Modifier
-                    .wrapContentHeight(),
+                    .wrapContentHeight()
+                    .onRotaryScrollEvent {
+                        coroutineScope.launch {
+                            listState.scrollBy(it.verticalScrollPixels)
+                        }
+                        true
+                    }
+                    .focusRequester(focusRequester)
+                    .focusable(),
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center,
                 state = listState
             ) {
                 item {
                     Row(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(8.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
@@ -124,7 +140,8 @@ fun SettingsDialog(
                 }
                 item {
                     Row(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(8.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
@@ -160,7 +177,8 @@ fun SettingsDialog(
                 }
                 item {
                     Row(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(8.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
@@ -196,7 +214,9 @@ fun SettingsDialog(
                 }
                 item {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
