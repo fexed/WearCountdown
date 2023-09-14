@@ -2,9 +2,9 @@
 <resources>
     <string name="app_name">Wear Countdown</string>
 
-    <string name="origin">Orig.</string>
-    <string name="target">Fine</string>
-    <string name="label">Testo</string>
+    <string name="origin">Data origine</string>
+    <string name="target">Data obiettivo</string>
+    <string name="label">Etichetta</string>
 
     <string name="tile_desc">Mostra il countdown in una scheda della schermata principale</string>
 

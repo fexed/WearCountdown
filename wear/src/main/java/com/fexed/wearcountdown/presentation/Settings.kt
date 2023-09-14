@@ -3,6 +3,9 @@ package com.fexed.wearcountdown.presentation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -18,8 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.Icon
+import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Text
 import com.fexed.wearcountdown.R
 import com.fexed.wearcountdown.presentation.theme.WearCountdownTheme
@@ -71,112 +76,145 @@ fun SettingsDialog(
     labelEdit: (() -> Unit),
     confirmBtn: (() -> Unit)
 ) {
+    val listState = rememberScalingLazyListState()
     WearCountdownTheme {
-        ScalingLazyColumn(
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Center
-        ) {
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.wrapContentSize(),
-                        textAlign = TextAlign.Center,
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        text = stringResource(id = R.string.origin)
-                    )
-                    Text(
-                        modifier = Modifier.wrapContentSize(),
-                        textAlign = TextAlign.Center,
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        text = originDate
-                    )
-                    Box(modifier = Modifier.clickable { originDateEdit.invoke() }) {
-                        Icon(Icons.Filled.Edit, contentDescription = "")
+        Row {
+            ScalingLazyColumn(
+                modifier = Modifier
+                    .wrapContentHeight(),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center,
+                state = listState
+            ) {
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.wrapContentSize(),
+                            textAlign = TextAlign.Center,
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            text = stringResource(id = R.string.origin)
+                        )
+                    }
+                }
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.wrapContentSize(),
+                            textAlign = TextAlign.Center,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            text = originDate
+                        )
+                        Box(modifier = Modifier.clickable { originDateEdit.invoke() }) {
+                            Icon(Icons.Filled.Edit, contentDescription = "")
+                        }
+                    }
+                }
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.wrapContentSize(),
+                            textAlign = TextAlign.Center,
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            text = stringResource(id = R.string.target)
+                        )
+                    }
+                }
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.wrapContentSize(),
+                            textAlign = TextAlign.Center,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            text = targetDate
+                        )
+                        Box(modifier = Modifier.clickable { targetDateEdit.invoke() }) {
+                            Icon(Icons.Filled.Edit, contentDescription = "")
+                        }
+                    }
+                }
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.wrapContentSize(),
+                            textAlign = TextAlign.Center,
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            text = stringResource(id = R.string.label)
+                        )
+                    }
+                }
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.wrapContentSize(),
+                            textAlign = TextAlign.Center,
+                            color = Color.White,
+                            fontSize = 12.sp,
+                            text = label
+                        )
+                        Box(modifier = Modifier.clickable { labelEdit.invoke() }) {
+                            Icon(Icons.Filled.Edit, contentDescription = "")
+                        }
+                    }
+                }
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Button(onClick = { confirmBtn.invoke() }) {
+                            Image(painterResource(id = R.drawable.confirmbtn), contentDescription = "")
+                        }
                     }
                 }
             }
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.wrapContentSize(),
-                        textAlign = TextAlign.Center,
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        text = stringResource(id = R.string.target)
-                    )
-                    Text(
-                        modifier = Modifier.wrapContentSize(),
-                        textAlign = TextAlign.Center,
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        text = targetDate
-                    )
-                    Box(modifier = Modifier.clickable { targetDateEdit.invoke() }) {
-                        Icon(Icons.Filled.Edit, contentDescription = "")
-                    }
-                }
-            }
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.wrapContentSize(),
-                        textAlign = TextAlign.Center,
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        text = stringResource(id = R.string.label)
-                    )
-                    Text(
-                        modifier = Modifier.wrapContentSize(),
-                        textAlign = TextAlign.Center,
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        text = label
-                    )
-                    Box(modifier = Modifier.clickable { labelEdit.invoke() }) {
-                        Icon(Icons.Filled.Edit, contentDescription = "")
-                    }
-                }
-            }
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Button(onClick = { confirmBtn.invoke() }) {
-                        Image(painterResource(id = R.drawable.confirmbtn), contentDescription = "")
-                    }
-                }
-            }
+            PositionIndicator(
+                scalingLazyListState = listState
+            )
         }
     }
 }
 
 
-@Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
+@Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true, locale = "it")
 @Composable
 fun RoundDialogPreview() {
     SettingsDialog(originDate = "dd/mm/yyyy", targetDate = "dd/mm/yyyy", label = "label",

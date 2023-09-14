@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Wear Countdown</string>
 
-    <string name="origin">Orig.</string>
-    <string name="target">Target</string>
+    <string name="origin">Source date</string>
+    <string name="target">Target date</string>
     <string name="label">Label</string>
 
     <string name="tile_desc">Shows the countdown in a homescreen tile</string>
