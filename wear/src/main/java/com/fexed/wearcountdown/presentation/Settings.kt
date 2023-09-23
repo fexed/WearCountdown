@@ -142,7 +142,9 @@ fun SettingsDialog(
                             fontSize = 16.sp,
                             text = originDate
                         )
-                        Box(modifier = Modifier.clickable { originDateEdit.invoke() }) {
+                        Box(modifier = Modifier.size(48.dp).clickable { originDateEdit.invoke() },
+                            contentAlignment = Alignment.Center
+                        ) {
                             Icon(Icons.Filled.Edit, contentDescription = "")
                         }
                     }
@@ -179,7 +181,9 @@ fun SettingsDialog(
                             fontSize = 16.sp,
                             text = targetDate
                         )
-                        Box(modifier = Modifier.clickable { targetDateEdit.invoke() }) {
+                        Box(modifier = Modifier.size(48.dp).clickable { targetDateEdit.invoke() },
+                            contentAlignment = Alignment.Center
+                        ) {
                             Icon(Icons.Filled.Edit, contentDescription = "")
                         }
                     }
@@ -216,7 +220,9 @@ fun SettingsDialog(
                             fontSize = 12.sp,
                             text = label
                         )
-                        Box(modifier = Modifier.clickable { labelEdit.invoke() }) {
+                        Box(modifier = Modifier.size(48.dp).clickable { labelEdit.invoke() },
+                            contentAlignment = Alignment.Center
+                        ) {
                             Icon(Icons.Filled.Edit, contentDescription = "")
                         }
                     }
