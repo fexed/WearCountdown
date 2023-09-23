@@ -31,6 +31,7 @@ import androidx.wear.compose.material.Text
 import com.fexed.wearcountdown.R
 import com.fexed.wearcountdown.presentation.theme.WearCountdownTheme
 import com.google.android.horologist.composables.DatePicker
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -82,6 +83,14 @@ fun SettingsDialog(
     val listState = rememberScalingLazyListState()
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(true) {
+        coroutineScope.launch {
+            delay(500)
+            listState.animateScrollToItem(2, 0)
+            listState.animateScrollToItem(1, 0)
+        }
+    }
 
     WearCountdownTheme {
         Row {
