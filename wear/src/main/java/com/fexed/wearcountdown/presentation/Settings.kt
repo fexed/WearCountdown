@@ -84,14 +84,6 @@ fun SettingsDialog(
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(true) {
-        coroutineScope.launch {
-            delay(500)
-            listState.animateScrollToItem(2, 0)
-            listState.animateScrollToItem(1, 0)
-        }
-    }
-
     WearCountdownTheme {
         Row {
             LaunchedEffect(Unit) { focusRequester.requestFocus() }
