@@ -15,6 +15,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -27,11 +28,12 @@ import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.PositionIndicator
+import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
+import com.fexed.wearcountdown.AlwaysShowScrollBarScalingLazyColumnStateAdapter
 import com.fexed.wearcountdown.R
 import com.fexed.wearcountdown.presentation.theme.WearCountdownTheme
 import com.google.android.horologist.composables.DatePicker
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -83,10 +85,26 @@ fun SettingsDialog(
     val listState = rememberScalingLazyListState()
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
+    val height = remember { mutableStateOf(1) }
+
+    LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
     WearCountdownTheme {
-        Row {
-            LaunchedEffect(Unit) { focusRequester.requestFocus() }
+        Scaffold(
+            modifier = Modifier.onGloballyPositioned { height.value = it.size.height },
+            positionIndicator = {
+                PositionIndicator(
+                    state = AlwaysShowScrollBarScalingLazyColumnStateAdapter(
+                        state = listState,
+                        viewportHeightPx = height
+                    ),
+                    indicatorHeight = 50.dp,
+                    indicatorWidth = 4.dp,
+                    paddingHorizontal = 5.dp,
+                    reverseDirection = false,
+                )
+            }
+        ) {
             ScalingLazyColumn(
                 modifier = Modifier
                     .wrapContentHeight()
@@ -134,7 +152,9 @@ fun SettingsDialog(
                             fontSize = 16.sp,
                             text = originDate
                         )
-                        Box(modifier = Modifier.size(48.dp).clickable { originDateEdit.invoke() },
+                        Box(modifier = Modifier
+                            .size(48.dp)
+                            .clickable { originDateEdit.invoke() },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(Icons.Filled.Edit, contentDescription = "")
@@ -173,7 +193,9 @@ fun SettingsDialog(
                             fontSize = 16.sp,
                             text = targetDate
                         )
-                        Box(modifier = Modifier.size(48.dp).clickable { targetDateEdit.invoke() },
+                        Box(modifier = Modifier
+                            .size(48.dp)
+                            .clickable { targetDateEdit.invoke() },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(Icons.Filled.Edit, contentDescription = "")
@@ -212,7 +234,9 @@ fun SettingsDialog(
                             fontSize = 12.sp,
                             text = label
                         )
-                        Box(modifier = Modifier.size(48.dp).clickable { labelEdit.invoke() },
+                        Box(modifier = Modifier
+                            .size(48.dp)
+                            .clickable { labelEdit.invoke() },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(Icons.Filled.Edit, contentDescription = "")
@@ -233,9 +257,6 @@ fun SettingsDialog(
                     }
                 }
             }
-            PositionIndicator(
-                scalingLazyListState = listState
-            )
         }
     }
 }
