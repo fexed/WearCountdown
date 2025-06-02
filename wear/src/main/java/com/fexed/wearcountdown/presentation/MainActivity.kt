@@ -40,6 +40,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.max
 
 class MainActivity : ComponentActivity() {
     private var kTargetDate = "target_DEBUG";
@@ -95,7 +96,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             navController = rememberSwipeDismissableNavController()
-            var difference = targetDate.epochSecond - originDate.epochSecond
+            var difference = max(targetDate.epochSecond - originDate.epochSecond, 1)
 
             var tempOrigin by remember { mutableStateOf(originDate) }
             var tempTarget by remember { mutableStateOf(targetDate) }
