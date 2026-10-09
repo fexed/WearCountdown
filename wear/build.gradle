@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.fexed.wearcountdown'
-    compileSdk 33
+    compileSdkVersion 37
 
     defaultConfig {
         applicationId "com.fexed.wearcountdown"
         minSdk 26
-        targetSdk 33
+        targetSdk 37
         versionCode 9
         versionName "1.4"
         vectorDrawables {
