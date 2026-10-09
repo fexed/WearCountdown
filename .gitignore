@@ -1,5 +1,7 @@
 *.iml
 .idea/
+/mobile/release/
+/wear/release/
 .gradle
 /local.properties
 /.idea/caches
